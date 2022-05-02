@@ -4,16 +4,23 @@ package com.cleanup.todoc.model;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>Models for project in which tasks are included.</p>
  *
  * @author Gaëtan HERFRAY
  */
+@Entity
 public class Project {
     /**
      * The unique identifier of the project
      */
+    @PrimaryKey(autoGenerate = true)
     private final long id;
 
     /**
@@ -35,24 +42,10 @@ public class Project {
      * @param name  the name of the project to set
      * @param color the hex (ARGB) code of the color associated to the project to set
      */
-    private Project(long id, @NonNull String name, @ColorInt int color) {
+    public Project(long id, @NonNull String name, @ColorInt int color) {
         this.id = id;
         this.name = name;
         this.color = color;
-    }
-
-    /**
-     * Returns all the projects of the application.
-     *
-     * @return all the projects of the application
-     */
-    @NonNull
-    public static Project[] getAllProjects() {
-        return new Project[]{
-                new Project(1L, "Projet Tartampion", 0xFFEADAD1),
-                new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
-                new Project(3L, "Projet Circus", 0xFFA3CED2),
-        };
     }
 
     /**
@@ -63,8 +56,8 @@ public class Project {
      * @return the project with the given unique identifier, or null if it has not been found
      */
     @Nullable
-    public static Project getProjectById(long id) {
-        for (Project project : getAllProjects()) {
+    public static Project getProjectById(long id, List<Project> projects) {
+        for (Project project : projects) {
             if (project.id == id)
                 return project;
         }
@@ -104,5 +97,18 @@ public class Project {
     @NonNull
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return id == project.id && color == project.color && name.equals(project.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, color);
     }
 }

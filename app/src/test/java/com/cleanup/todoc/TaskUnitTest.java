@@ -1,12 +1,15 @@
 package com.cleanup.todoc;
 
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -25,10 +28,15 @@ public class TaskUnitTest {
         final Task task3 = new Task(3, 3, "task 3", new Date().getTime());
         final Task task4 = new Task(4, 4, "task 4", new Date().getTime());
 
-        assertEquals("Projet Tartampion", task1.getProject().getName());
-        assertEquals("Projet Lucidia", task2.getProject().getName());
-        assertEquals("Projet Circus", task3.getProject().getName());
-        assertNull(task4.getProject());
+        final Project project1 = new Project(1, "Projet Tartampion", 0xFFEADAD1);
+        final Project project2 = new Project(2, "Projet Lucidia", 0xFFB4CDBA);
+        final Project project3 = new Project(3, "Projet Circus", 0xFFA3CED2);
+        final List<Project> projects = Arrays.asList(project1, project2, project3);
+
+        assertEquals("Projet Tartampion", task1.getProject(projects).getName());
+        assertEquals("Projet Lucidia", task2.getProject(projects).getName());
+        assertEquals("Projet Circus", task3.getProject(projects).getName());
+        assertNull(task4.getProject(projects));
     }
 
     @Test

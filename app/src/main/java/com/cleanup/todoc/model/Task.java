@@ -3,18 +3,29 @@ package com.cleanup.todoc.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>Model for the tasks of the application.</p>
  *
  * @author Gaëtan HERFRAY
  */
+@Entity(foreignKeys = @ForeignKey(
+        entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId"))
 public class Task {
+
     /**
      * The unique identifier of the task
      */
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     /**
@@ -77,14 +88,15 @@ public class Task {
         this.projectId = projectId;
     }
 
+
     /**
      * Returns the project associated to the task.
      *
      * @return the project associated to the task
      */
     @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
+    public Project getProject(List<Project> projects) {
+        return Project.getProjectById(projectId, projects);
     }
 
     /**
@@ -113,6 +125,27 @@ public class Task {
      */
     private void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && projectId == task.projectId && creationTimestamp == task.creationTimestamp && name.equals(task.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, projectId, name, creationTimestamp);
     }
 
     /**
